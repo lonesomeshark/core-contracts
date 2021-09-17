@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "test": "hardhat test",
-    "compile": "rm -rf typechain  artifacts cache && hardhat compile"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "compile": "rm -rf typechain  artifacts cache && hardhat compile",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@openzeppelin/contracts": "3.1.0"
@@ -19,9 +21,13 @@
     "@types/chai": "^4.2.18",
     "@types/mocha": "^8.2.2",
     "@types/node": "^15.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
     "chai": "^4.2.0",
     "dotenv": "^10.0.0",
-    "eslint": "^7.29.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.23.4",
@@ -33,6 +39,7 @@
     "hardhat": "^2.6.4",
     "hardhat-contract-sizer": "^2.1.0",
     "hardhat-gas-reporter": "^1.0.4",
+    "husky": "^7.0.2",
     "prettier": "^2.3.2",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.6",

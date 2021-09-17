@@ -10,3 +10,11 @@ artifacts
 
 # typechain
 typechain
+
+# don't lint build output (make sure it's set to your correct build folder name)
+dist
+# don't lint nyc coverage output
+coverage
+
+# yarn
+yarn-error.log
