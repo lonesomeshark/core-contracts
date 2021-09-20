@@ -1,3 +1,9 @@
+# Flashloan UML Diagram 
+(diagrams/flashloan_uml.svg)
+
+Created with [sol2uml](https://github.com/naddison36/sol2uml)
+
+
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
