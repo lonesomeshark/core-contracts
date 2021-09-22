@@ -1,5 +1,5 @@
 # Flashloan UML Diagram 
-(diagrams/flashloan_uml.svg)
+![Flashloan UML](diagrams/flashloan_uml.svg "Flashloan UML")
 
 Created with [sol2uml](https://github.com/naddison36/sol2uml)
 
