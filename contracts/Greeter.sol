@@ -19,4 +19,13 @@ contract Greeter {
         console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
         greeting = _greeting;
     }
+    function setGreeting(string memory _greeting, string memory _prefix) public {
+        console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
+        
+        greeting = string(abi.encodePacked(_prefix, _greeting));
+    }
+
+    function setPostfixGreeting(string calldata _postfix) public {
+        greeting = string(abi.encodePacked(greeting, _postfix));
+    }
 }
