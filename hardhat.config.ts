@@ -1,9 +1,12 @@
 import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
+import "@nomiclabs/hardhat-ethers";
 import '@typechain/hardhat'
+// import hre from "hardhat";
 import { HardhatUserConfig } from "hardhat/config";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import "hardhat-contract-sizer";
+
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
