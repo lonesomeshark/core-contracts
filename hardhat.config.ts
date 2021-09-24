@@ -3,6 +3,9 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-contract-sizer";
 import dotenv from "dotenv";
+import "@nomiclabs/hardhat-etherscan";
+import "hardhat-gas-reporter";
+import { HardhatUserConfig } from "hardhat/types";
 
 const envPath = process.env.ENV_PATH ? { path: process.env.ENV_PATH } : {};
 dotenv.config(envPath);
@@ -16,9 +19,14 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-const config = {
-  solidity: "0.8.4",
+const config: HardhatUserConfig = {
+  solidity: { compilers: [{ version: "0.8.4" }, { version: "0.6.12" }] },
   networks: {
+    kovan: {
+      url: process.env.INFURA_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
     hardhat: {
       initialBaseFeePerGas: 0, // workaround from https://github.com/sc-forks/solidity-coverage/issues/652#issuecomment-896330136 . Remove when that issue is closed.
     },
@@ -34,6 +42,9 @@ const config = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+  },
+  mocha: {
+    grep: process.env.ENV_TEST ? process.env.ENV_TEST : "",
   },
 };
 
