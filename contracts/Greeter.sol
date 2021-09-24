@@ -28,4 +28,7 @@ contract Greeter {
     function setPostfixGreeting(string calldata _postfix) public {
         greeting = string(abi.encodePacked(greeting, _postfix));
     }
+    function setPostfixGreetingMemory(string memory _postfix) public {
+        greeting = string(abi.encodePacked(greeting, _postfix));
+    }
 }

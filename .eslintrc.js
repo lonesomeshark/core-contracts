@@ -32,6 +32,7 @@ module.exports = {
       rules: {
         "node/no-unpublished-require": "off",
         camelcase: "off",
+        "no-unused-vars": "off",
       },
     },
   ],
