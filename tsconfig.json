@@ -13,11 +13,12 @@
     },
     "exclude": ["dist", "node_modules","typechain"],
     "files": ["./hardhat.config.ts"],
-    "include": [
-      "./test",
-      "./src",
-      "./scripts",
-      "./script_interactions",
-      "./.eslintrc.js"
-    ]
+    "include": ["./hardhat.config.ts","./scripts","src/**/*", "**/*.ts","./test", "typechain/**/*"]
+    // "include": [
+    //   "./test",
+    //   "./src",
+    //   "./scripts",
+    //   "./script_interactions",
+    //   "./.eslintrc.js"
+    // ]
   }

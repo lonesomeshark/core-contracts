@@ -2,6 +2,7 @@ import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-contract-sizer";
+import "@typechain/hardhat";
 import dotenv from "dotenv";
 
 const envPath = process.env.ENV_PATH ? { path: process.env.ENV_PATH } : {};
