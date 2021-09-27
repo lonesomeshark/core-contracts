@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { isRegExp } from "util/types";
 import { Greeter, Greeter__factory } from "../typechain";
 
 let greeter: Greeter;

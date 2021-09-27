@@ -1,11 +1,11 @@
 import { task } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/types";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-contract-sizer";
 import dotenv from "dotenv";
 import "@nomiclabs/hardhat-etherscan";
 import "hardhat-gas-reporter";
-import { HardhatUserConfig } from "hardhat/types";
 
 const envPath = process.env.ENV_PATH ? { path: process.env.ENV_PATH } : {};
 dotenv.config(envPath);
