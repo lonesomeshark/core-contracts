@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
 
 import { FlashLoanReceiverBase } from "@aave/protocol-v2/contracts/flashloan/base/FlashLoanReceiverBase.sol";
@@ -13,8 +14,22 @@ import { ERC20 } from "@aave/protocol-v2/contracts/dependencies/openzeppelin/con
     !!!
  */
 contract MyV2FlashLoan is FlashLoanReceiverBase {
-
-    constructor(ILendingPoolAddressesProvider _provider) FlashLoanReceiverBase(_provider) public {}
+    ILendingPoolAddressesProvider provider;
+    uint256 flashAaveAmt0;
+    uint256 flashDaiAmt1;
+    uint256 flashLinkAmt2;
+    address lendingPoolAddr;
+    
+ // kovan reserve asset addresses
+    address kovanAave = 0xB597cd8D3217ea6477232F9217fa70837ff667Af;
+    address kovanDai = 0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD;
+    address kovanLink = 0xAD5ce863aE3E4E9394Ab43d4ba0D80f419F61789;
+    constructor(ILendingPoolAddressesProvider _provider) 
+    FlashLoanReceiverBase(_provider) 
+    public {
+        provider = _provider;
+        lendingPoolAddr = provider.getLendingPool();
+    }
     /**
         This function is called after your contract has received the flash loaned amount
      */
@@ -39,6 +54,23 @@ contract MyV2FlashLoan is FlashLoanReceiverBase {
         // the flashloaned amounts + premiums.
         // Therefore ensure your contract has enough to repay
         // these amounts.
+
+         // initialise lending pool instance
+        ILendingPool lendingPool = ILendingPool(lendingPoolAddr);
+
+        // deposits the flashed AAVE, DAI and Link liquidity onto the lending pool
+        flashDeposit(lendingPool);
+
+        uint256 borrowAmt = 100 * 1e18; // to borrow 100 units of x asset
+
+        // borrows 'borrowAmt' amount of LINK using the deposited collateral
+        flashBorrow(lendingPool, kovanLink, borrowAmt);
+
+        // repays the 'borrowAmt' mount of LINK to unlock the collateral
+        flashRepay(lendingPool, kovanLink, borrowAmt);
+
+        // withdraws the AAVE, DAI and LINK collateral from the lending pool
+        flashWithdraw(lendingPool);
         
         // Approve the LendingPool contract allowance to *pull* the owed amount
         for (uint i = 0; i < assets.length; i++) {
@@ -48,6 +80,87 @@ contract MyV2FlashLoan is FlashLoanReceiverBase {
         
         return true;
     }
+
+
+      /*
+     * Deposits the flashed AAVE, DAI and LINK liquidity onto the lending pool as collateral
+     */
+    function flashDeposit(ILendingPool _lendingPool) public {
+        // approve lending pool
+        IERC20(kovanDai).approve(lendingPoolAddr, flashDaiAmt1);
+        IERC20(kovanAave).approve(lendingPoolAddr, flashAaveAmt0);
+        IERC20(kovanLink).approve(lendingPoolAddr, flashLinkAmt2);
+
+        // deposit the flashed AAVE, DAI and LINK as collateral
+        _lendingPool.deposit(kovanDai, flashDaiAmt1, address(this), uint16(0));
+        _lendingPool.deposit(
+            kovanAave,
+            flashAaveAmt0,
+            address(this),
+            uint16(0)
+        );
+        _lendingPool.deposit(
+            kovanLink,
+            flashLinkAmt2,
+            address(this),
+            uint16(0)
+        );
+    }
+
+    /*
+     * Withdraws the AAVE, DAI and LINK collateral from the lending pool
+     */
+    function flashWithdraw(ILendingPool _lendingPool) public {
+        // function withdraw(address asset, uint256 amount, address to)
+        _lendingPool.withdraw(kovanAave, flashAaveAmt0, address(this));
+        _lendingPool.withdraw(kovanDai, flashDaiAmt1, address(this));
+        _lendingPool.withdraw(kovanLink, flashLinkAmt2, address(this));
+    }
+
+    /*
+     * Borrows _borrowAmt amount of _borrowAsset based on the existing deposited collateral
+     */
+    function flashBorrow(
+        ILendingPool _lendingPool,
+        address _borrowAsset,
+        uint256 _borrowAmt
+    ) public {
+        // borrowing x asset at stable rate, no referral, for yourself
+        // https://docs.aave.com/developers/v/1.0/developing-on-aave/the-protocol/lendingpool
+        _lendingPool.borrow(
+            _borrowAsset,
+            _borrowAmt,
+            1,
+            uint16(0),
+            address(this)
+        );
+    }
+
+    /*
+     * Repays _repayAmt amount of _repayAsset
+     */
+    function flashRepay(
+        ILendingPool _lendingPool,
+        address _repayAsset,
+        uint256 _repayAmt
+    ) public {
+        // approve the repayment from this contract
+        IERC20(_repayAsset).approve(lendingPoolAddr, _repayAmt);
+        // function repay( address _reserve, uint256 _amount, address payable _onBehalfOf)
+        _lendingPool.repay(_repayAsset, _repayAmt, 1, address(this));
+    }
+
+    /*
+     * Repays _repayAmt amount of _repayAsset
+     */
+    function flashSwapBorrowRate(
+        ILendingPool _lendingPool,
+        address _asset,
+        uint256 _rateMode
+    ) public {
+        _lendingPool.swapBorrowRateMode(_asset, _rateMode);
+    }
+
 
 
     // LINK 0xa36085F69e2889c224210F603D836748e7dC0088
